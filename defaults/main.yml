@@ -1,0 +1,213 @@
+# certificates:
+#   ca: |
+#     -----BEGIN CERTIFICATE-----
+#     111
+#     -----END CERTIFICATE-----
+#   crt: |
+#     -----BEGIN CERTIFICATE----- 
+#     111
+#     -----END CERTIFICATE-----
+#   key: |
+#     -----BEGIN PRIVATE KEY-----
+#     111
+#     -----END PRIVATE KEY----- 
+
+domain: dev.local # Address of your cluster
+subdomain: decs # Use subdomain
+
+dns:
+  primary: 77.88.8.8
+  secondary: 77.88.8.1
+
+grid_id: 101 # ID of your cluster, must be unique
+
+network:
+  vip: 192.168.123.5 # Choose free ip from public subnet
+  backplane:
+    subnet: 10.235.1.0/24
+    vlan: 2401
+  gateway_management: # Also named as "gw-management"
+    subnet: 10.199.0.0/19
+    vlan: 0
+  ipmi:
+    subnet: 172.30.222.0/24
+    vlan: 1204
+  management:
+    subnet: 10.235.2.0/24
+    gateway: 10.235.2.254 # Choose last ip in subnet
+    vlan: 0
+  public:
+    subnet: 192.168.123.0/24
+    gateway: 192.168.123.1
+    vlan: 516
+  vxbackend:
+    subnet: 10.240.0.0/16
+    vlan: 1
+
+# List of all nodes
+# network fallback same as public
+# network gateway-management same as gw-management
+# ip-lsb is last byte of backplane subnet
+# ipmi subnet. address VNC server. ipmi.macaddress can get by `ipmitool lan print` on node
+# mgmt.macaddress can get by `ip -br l | grep mgmt` on node
+# roles can be "controller" for controller node, "des" and "des_storagemaster" for des node, "cpu_des" for cpu node
+# osversion. for astralinux before basis 3.8.8 set 18, from 3.8.8 set ???astralinux version like 174???
+nodes: 
+  - "backplane":
+      "ipaddress": |-
+        10.235.1.1/24
+    "fallback":
+      "gateway": |-
+        {{ network.public.gateway }}
+      "ipaddress": |-
+        192.168.123.97/24
+    "gateway-management":
+      "ipaddress": |-
+        10.199.0.1/19
+    "ip-lsb": !!int |-
+      1
+    "ipmi":
+      "ipaddress": |-
+        172.30.222.117/24
+      "macaddress": |-
+        38:68:dd:19:f7:5d
+      "password": |-
+        root
+      "username": |-
+        root
+    "management":
+      "ipaddress": |-
+        10.235.2.1/24
+      "macaddress": |-
+        a0:c5:f2:10:56:01
+    "name": |-
+      ctrl1
+    "roles":
+    - |-
+      controller
+    "vxbackend":
+      "ipaddress": |-
+        10.240.0.1/16
+    "osversion":
+      "18"
+  - "backplane":
+      "ipaddress": |-
+        10.235.1.2/24
+    "fallback":
+      "gateway": |-
+        192.168.123.1
+      "ipaddress": |-
+        192.168.123.98
+    "gateway-management":
+      "ipaddress": |-
+        10.199.0.2/19
+    "ip-lsb": !!int |-
+      2
+    "ipmi":
+      "ipaddress": |-
+        172.30.222.118/24
+      "macaddress": |-
+        38:68:dd:1a:24:8d
+      "password": |-
+        root
+      "username": |-
+        root
+    "management":
+      "ipaddress": |-
+        10.235.2.2/24
+      "macaddress": |-
+        a0:c5:f2:10:02:02
+    "name": |-
+      ctrl2
+    "roles":
+    - |-
+      controller
+    "vxbackend":
+      "ipaddress": |-
+        10.240.0.2/16
+    "osversion":
+      "18"
+  - "backplane":
+      "ipaddress": |-
+        10.235.1.3/24
+    "fallback":
+      "gateway": |-
+        192.168.123.1
+      "ipaddress": |-
+        192.168.123.99
+    "gateway-management":
+      "ipaddress": |-
+        10.199.0.3/19
+    "ip-lsb": !!int |-
+      3
+    "ipmi":
+      "ipaddress": |-
+        172.30.222.119/24
+      "macaddress": |-
+        38:68:dd:19:e5:cd
+      "password": |-
+        root
+      "username": |-
+        root
+    "management":
+      "ipaddress": |-
+        10.235.2.3/24
+      "macaddress": |-
+        a0:c5:f2:10:02:03
+    "name": |-
+      ctrl3
+    "roles":
+    - |-
+      controller
+    "vxbackend":
+      "ipaddress": |-
+        10.240.0.3/16
+    "osversion":
+      "18"
+  - "backplane":
+      "ipaddress": |-
+        10.235.1.11/24
+    "gateway-management":
+      "ipaddress": |-
+        10.199.0.11/19
+    "ip-lsb": !!int |-
+      11
+    "ipmi":
+      "ipaddress": |-
+        172.30.222.120/24
+      "macaddress": |-
+        38:68:dd:19:d0:a5
+      "password": |-
+        root
+      "username": |-
+        root
+    "management":
+      "ipaddress": |-
+        10.235.2.11/24
+      "macaddress": |-
+        e4:1f:13:da:71:03
+    "name": |-
+      cpu1
+    "roles":
+    - |-
+      cpu_des
+    "vxbackend":
+      "ipaddress": |-
+        10.240.0.11/16
+    "osversion":
+      "18"
+
+# ssh:
+#   private-key: |
+#     -----BEGIN RSA PRIVATE KEY-----
+#     11111
+#     -----END RSA PRIVATE KEY-----
+#   # You should populate this public key on all nodes before installation control cluster
+#   public-key: |-
+#     ssh-rsa 11111
+
+timezone: MSK
+
+decort:
+  archive_url: https://colba.decs.online/index.php/s/4p5nseyEdS5aGdN/download
+  version: 3.8.8

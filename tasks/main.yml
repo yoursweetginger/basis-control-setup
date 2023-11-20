@@ -1,0 +1,103 @@
+- name: Copy system-config file
+  template:
+    src: system-config.yaml.j2
+    dest: "/home/{{ ansible_user }}/system-config.yaml"
+  tags:
+    - system-config
+
+- name: Download decort archive
+  ansible.builtin.get_url:
+    url: " {{ decort.archive_url }}"
+    dest: /tmp/decort.tar.gz
+    mode: '0540'
+  tags:
+    - archive
+
+- name: Unpack decort archive
+  ansible.builtin.unarchive:
+    src: /tmp/decort.tar.gz
+    dest: /tmp/decort
+  tags:
+    - archive
+
+- name: Install required packages for interacting ansible with docker and kubernetes
+  apt:
+    name:
+      - python3-requests
+      - python-yaml
+
+- name: Load management image from the tar file
+  community.docker.docker_image_load:
+    path: "/tmp/decort/de/management:{{ decort.version }}.tar"
+
+- name: Run management image
+  community.docker.docker_container:
+    name: management
+    image: "registry-1:5000/de/management:{{ decort.version }}"
+    command: init
+    state: started
+    restart_policy: unless-stopped
+
+- name: Copy system-config file into management container
+  community.docker.docker_container_copy_into:
+    container: management
+    path: "/home/{{ ansible_user }}/system-config.yaml"
+    container_path: /tmp/system-config.yaml
+  tags:
+    - system-config
+
+- name: Run installation kubernetes
+  community.docker.docker_container_exec:
+    container: management
+    command: installer --config /tmp/system-config.yaml kubernetes install
+
+- name: Run installation registry
+  community.docker.docker_container_exec:
+    container: management
+    command: installer --config /tmp/system-config.yaml registry install
+    env: 
+      DECORT_MNT_PATH: /tmp/decort
+
+- name: Run installation mongodb
+  community.docker.docker_container_exec:
+    container: management
+    command: installer --config /tmp/system-config.yaml mongo install
+    env: 
+      DECORT_MNT_PATH: /tmp/decort
+
+- name: Run installation decs3o
+  community.docker.docker_container_exec:
+    container: management
+    command: installer --config /tmp/system-config.yaml decs3o install
+    env: 
+      DECORT_MNT_PATH: /tmp/decort
+
+- name: Run installation cluster dynamix
+  community.docker.docker_container_exec:
+    container: management
+    command: installer --config /tmp/system-config.yaml cluster install
+    env: 
+      DECORT_MNT_PATH: /tmp/decort
+
+- name: Run installation keepalive
+  community.docker.docker_container_exec:
+    container: management
+    command: installer --config /tmp/system-config.yaml keepalive install --ipaddress {{ network.vip }}
+    env: 
+      DECORT_MNT_PATH: /tmp/decort
+
+- name: Get management pod
+  kubernetes.core.k8s_info:
+    namespace: default
+    kind: Pod
+    label_selectors:
+      - name=management
+  register: management_pod
+
+# TODO: Take cpu nodes from inventory
+- name: Add cpu nodes to cluster
+  kubernetes.core.k8s_exec:
+    namespace: default
+    pod: "{{ management_pod.resources[0].name }}"
+    command: installer node service install --name {{ item }}
+  loop: "{{ nodes.cpu }}"

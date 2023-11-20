@@ -1,0 +1,170 @@
+"certificates":
+  "ca": |
+    {{ certificates.ca | indent(4) }}
+  "{{ domain }}":
+    "crt": |
+      {{ certificates.crt | indent(6) }}
+    "key": | 
+      {{ certificates.key | indent(6) }}
+"decs3o":
+  "adminId": |-
+    xm6SWdtovuwM10_cVWMODbj8MuN5
+  "adminSecret": |-
+    9ykkb5wOdcpK1kavKX-TiIIS1ehw
+  "clientId": |-
+    {{ subdomain }}
+  "clientSecret": |-
+    hzbHBuop8TJAlp5Rs_h5pYbhFZ7T-UWZpZlsM56ypb14TSCSgb5Q
+  "darkSite": !!bool |-
+    true
+  "dbName": |-
+    decs3o-idms-db
+  "decs3o_app_config": |-
+    mode:
+      darksite: true
+      ldap: false
+      twofactor: false
+      emailoff: true
+      policy: default
+    server:
+      host: "0.0.0.0"
+      port: 8443
+      cert: "/certs/{{ domain }}.crt"
+      pkey: "/certs/{{ domain }}.key"
+    database:
+      host: "mongo"
+      port: 27017
+      name: "decs3o-idms-db"
+    email:
+      host: "smtp.office365.com"
+      port: 587
+      user: "noreply@digitalenergy.online"
+      password: "oph0eiMeiLah5eim"
+      altemail: "noreply@digitalenergy.online"
+      certoff: true
+    logger:
+      debug: false
+  "environment": |-
+    {{ subdomain }}
+  "jwt_public_key": |
+    -----BEGIN PUBLIC KEY-----
+    MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEdGDtMDdvcskxKgTiUDrRB3mkTr+E6JFP
+    Kg8+SbHcDoM15hp20RJo2CGFbEHXKalWRLW9zgcUHl2BkJLBceNY8PYNcXeqQe5Z
+    mvSSfL+QBPFYDSgW3gWkQ0wfCPYi3yM+
+    -----END PUBLIC KEY-----
+  "mongo_url": |-
+    mongo:27017
+  "port": !!int |-
+    5000
+  "private": !!bool |-
+    true
+  "server": |-
+    https://sso-{{ subdomain }}.{{ domain }}:8443
+  "session_timeout": !!int |-
+    28800
+  "ssh_port": !!int |-
+    7022
+"docker_registry":
+  "password": |-
+    password
+  "server": |-
+    registry-1:5000
+  "username": |-
+    username
+"environment":
+  "base_image_name": |-
+    de/base
+  "basedomain": |-
+    {{ domain }}
+  "customer_dns":
+    "ns1": |-
+      {{ dns.primary }}
+    "ns2": |-
+      {{ dns.secondary }}
+  "dns":
+    "ns1": |-
+      {{ dns.primary }}
+    "ns2": |-
+      {{ dns.secondary }}
+  "grid":
+    "id": !!int |-
+      {{ grid_id }}
+  "password": |-
+    Daxgi3m0g8
+  "ssl":
+    "decs3o": |-
+      {{ domain }}
+    "defense": |-
+      {{ domain }}
+    "des": |-
+      {{ domain }}
+    "novnc": |-
+      {{ domain }}
+    "ovs": |-
+      {{ domain }}
+    "root": |-
+      {{ domain }}
+  "subdomain": |-
+    {{ subdomain }}
+  "type": |-
+    medium
+"mailclient":
+  "login": |-
+    noreply@digitalenergy.online
+  "passwd": |-
+    oph0eiMeiLah5eim
+  "port": !!int |-
+    587
+  "sender": |-
+    noreply@digitalenergy.online
+  "server": |-
+    smtp.office365.com
+  "ssl": |-
+    true
+"network":
+  "backplane":
+    "network": |-
+      {{ network.backplane.subnet }}
+    "vlan": !!int |-
+      {{ network.backplane.vlan }}
+  "gateway-management":
+    "network": |-
+      {{ network.gateway_management.subnet }}
+    "vlan": !!int |-
+      {{ network.gateway_management.vlan }}
+  "ipmi":
+    "network": |-
+      {{ network.ipmi.subnet }}
+    "vlan": !!int |-
+      {{ network.ipmi.vlan }}
+  "management":
+    "gateway": |-
+      {{ network.management.gateway }}
+    "network": |-
+      {{ network.management.subnet }}
+    "vlan": !!int |-
+      {{ network.management.vlan }}
+  "public":
+    "gateway": |-
+      {{ network.public.gateway }}
+    "network": |-
+      {{ network.public.subnet }}
+    "vlan": !!int |-
+      {{ network.public.vlan }}
+  "vip":
+  - |-
+    {{ network.vip }}
+  "vxbackend":
+    "network": |-
+      {{ network.vxbackend.subnet }}
+    "vlan": !!int |-
+      {{ network.vxbackend.vlan }}
+"nodes":
+{{ nodes }}
+"ssh":
+  "private-key": |
+    {{ ssh.private_key | indent(4) }}
+  "public-key": |-
+    {{ ssh.public_key | indent(4) }}
+"timezone": |-
+  {{ timezone }}
