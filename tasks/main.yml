@@ -20,11 +20,17 @@
   tags:
     - archive
 
-- name: Install required packages for interacting ansible with docker and kubernetes
+- name: Install pip for required python packages
   apt:
     name:
-      - python3-requests
-      - python-yaml
+      - python3-pip
+
+- name: Install required packages for interacting ansible with docker and kubernetes
+  pip:
+    name:
+      - requests
+      - PyYAML
+      - kubernetes 
 
 - name: Load management image from the tar file
   community.docker.docker_image_load:
@@ -78,6 +84,8 @@
     command: installer --config /tmp/system-config.yaml cluster install
     env: 
       DECORT_MNT_PATH: /tmp/decort
+  async: 900
+  poll: 5
 
 - name: Run installation keepalive
   community.docker.docker_container_exec:
@@ -91,13 +99,13 @@
     namespace: default
     kind: Pod
     label_selectors:
-      - name=management
+      - app=management
   register: management_pod
 
 # TODO: Take cpu nodes from inventory
 - name: Add cpu nodes to cluster
   kubernetes.core.k8s_exec:
     namespace: default
-    pod: "{{ management_pod.resources[0].name }}"
+    pod: "{{ management_pod.resources[0].metadata.name }}"
     command: installer node service install --name {{ item }}
-  loop: "{{ nodes.cpu }}"
+  loop: "{{ cpu_nodes }}"
