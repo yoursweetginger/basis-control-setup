@@ -8,13 +8,13 @@
       {{ certificates.key | indent(6) }}
 "decs3o":
   "adminId": |-
-    xm6SWdtovuwM10_cVWMODbj8MuN5
+    {{ decs3o.adminId }}
   "adminSecret": |-
-    9ykkb5wOdcpK1kavKX-TiIIS1ehw
+    {{ decs3o.adminSecret }}
   "clientId": |-
     {{ subdomain }}
   "clientSecret": |-
-    hzbHBuop8TJAlp5Rs_h5pYbhFZ7T-UWZpZlsM56ypb14TSCSgb5Q
+    {{ decs3o.clientSecret }}
   "darkSite": !!bool |-
     true
   "dbName": |-
@@ -35,23 +35,12 @@
       host: "mongo"
       port: 27017
       name: "decs3o-idms-db"
-    email:
-      host: "smtp.office365.com"
-      port: 587
-      user: "noreply@digitalenergy.online"
-      password: "oph0eiMeiLah5eim"
-      altemail: "noreply@digitalenergy.online"
-      certoff: true
     logger:
       debug: false
   "environment": |-
     {{ subdomain }}
   "jwt_public_key": |
-    -----BEGIN PUBLIC KEY-----
-    MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEdGDtMDdvcskxKgTiUDrRB3mkTr+E6JFP
-    Kg8+SbHcDoM15hp20RJo2CGFbEHXKalWRLW9zgcUHl2BkJLBceNY8PYNcXeqQe5Z
-    mvSSfL+QBPFYDSgW3gWkQ0wfCPYi3yM+
-    -----END PUBLIC KEY-----
+    {{ decs3o.jwt_public_key | indent(4) }}
   "mongo_url": |-
     mongo:27017
   "port": !!int |-
@@ -106,13 +95,11 @@
       {{ domain }}
   "subdomain": |-
     {{ subdomain }}
-  "type": |-
-    medium
 "mailclient":
   "login": |-
     noreply@digitalenergy.online
   "passwd": |-
-    oph0eiMeiLah5eim
+    password
   "port": !!int |-
     587
   "sender": |-
@@ -135,8 +122,6 @@
   "ipmi":
     "network": |-
       {{ network.ipmi.subnet }}
-    "vlan": !!int |-
-      {{ network.ipmi.vlan }}
   "management":
     "gateway": |-
       {{ network.management.gateway }}

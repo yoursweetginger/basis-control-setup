@@ -12,6 +12,15 @@
 #     111
 #     -----END PRIVATE KEY----- 
 
+# decs3o:
+#   adminId: 1111
+#   adminSecret: 1111
+#   clientSecret: 1111
+#   jwt_public_key: |
+#     -----BEGIN PUBLIC KEY-----
+#     1111
+#     -----END PUBLIC KEY-----
+
 domain: dev.local # Address of your cluster
 subdomain: decs # Use subdomain
 
@@ -31,7 +40,6 @@ network:
     vlan: 0
   ipmi:
     subnet: 172.30.222.0/24
-    vlan: 1204
   management:
     subnet: 10.235.2.0/24
     gateway: 10.235.2.254 # Choose last ip in subnet
@@ -51,7 +59,7 @@ network:
 # ipmi subnet. address VNC server. ipmi.macaddress can get by `ipmitool lan print` on node
 # mgmt.macaddress can get by `ip -br l | grep mgmt` on node
 # roles can be "controller" for controller node, "des" and "des_storagemaster" for des node, "cpu_des" for cpu node
-# osversion. for astralinux before basis 3.8.8 set 18, from 3.8.8 set ???astralinux version like 174???
+# osversion. for astralinux before basis 3.8.8 set "18", from 3.8.8 set "astra1.7"
 nodes: 
   - "backplane":
       "ipaddress": |-
@@ -70,7 +78,7 @@ nodes:
       "ipaddress": |-
         172.30.222.117/24
       "macaddress": |-
-        38:68:dd:19:f7:5d
+        00:00:00:00:00:00
       "password": |-
         root
       "username": |-
@@ -79,7 +87,7 @@ nodes:
       "ipaddress": |-
         10.235.2.1/24
       "macaddress": |-
-        a0:c5:f2:10:56:01
+        00:00:00:00:00:00
     "name": |-
       ctrl1
     "roles":
@@ -107,7 +115,7 @@ nodes:
       "ipaddress": |-
         172.30.222.118/24
       "macaddress": |-
-        38:68:dd:1a:24:8d
+        00:00:00:00:00:00
       "password": |-
         root
       "username": |-
@@ -116,7 +124,7 @@ nodes:
       "ipaddress": |-
         10.235.2.2/24
       "macaddress": |-
-        a0:c5:f2:10:02:02
+        00:00:00:00:00:00
     "name": |-
       ctrl2
     "roles":
@@ -144,7 +152,7 @@ nodes:
       "ipaddress": |-
         172.30.222.119/24
       "macaddress": |-
-        38:68:dd:19:e5:cd
+        00:00:00:00:00:00
       "password": |-
         root
       "username": |-
@@ -153,7 +161,7 @@ nodes:
       "ipaddress": |-
         10.235.2.3/24
       "macaddress": |-
-        a0:c5:f2:10:02:03
+        00:00:00:00:00:00
     "name": |-
       ctrl3
     "roles":
@@ -176,7 +184,7 @@ nodes:
       "ipaddress": |-
         172.30.222.120/24
       "macaddress": |-
-        38:68:dd:19:d0:a5
+        00:00:00:00:00:00
       "password": |-
         root
       "username": |-
@@ -185,7 +193,7 @@ nodes:
       "ipaddress": |-
         10.235.2.11/24
       "macaddress": |-
-        e4:1f:13:da:71:03
+        00:00:00:00:00:00
     "name": |-
       cpu1
     "roles":
